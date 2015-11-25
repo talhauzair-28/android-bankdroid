@@ -46,6 +46,11 @@ public class AccountsAdapter extends BaseAdapter {
 
     private ArrayList<Bank> banks;
 
+
+
+    //// this is my cooment
+    
+
     private Context context;
 
     private LayoutInflater inflater;
