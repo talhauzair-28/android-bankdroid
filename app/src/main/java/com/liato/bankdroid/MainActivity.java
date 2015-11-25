@@ -47,6 +47,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -59,6 +60,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends LockableActivity {
+
+
+    @InjectView(R.id.overallBackground)
+    LinearLayout backgroundcolor;
 
 
     int Sortcheck =0;
@@ -183,6 +188,10 @@ public class MainActivity extends LockableActivity {
         // Receive refresh Intent from AutoRefreshService and refresh the main view if changes
         // have been detected.
         registerReceiver(receiver, new IntentFilter(AutoRefreshService.BROADCAST_MAIN_REFRESH));
+
+
+        backgroundcolor.setBackgroundColor(getPreferences(MODE_PRIVATE ).getInt("background_color",0));
+
         refreshView();
     }
 
