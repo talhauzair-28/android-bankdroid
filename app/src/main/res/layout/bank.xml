@@ -31,6 +31,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/bank"/>
 
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                android:focusable="true"
+                android:hint="Search Bank"
+                android:id="@+id/etSearch"
+                />
+
             <Spinner
                 android:id="@+id/spnBankeditBanklist"
                 android:layout_width="fill_parent"

@@ -51,6 +51,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -154,6 +156,16 @@ public class MainActivity extends LockableActivity {
     public void refreshView() {
         final ArrayList<Bank> banks = BankFactory.banksFromDb(this, true);
         mAccountsDescription.setVisibility(banks.isEmpty() ? View.VISIBLE : View.GONE);
+
+
+
+        Collections.sort(banks, new Comparator<Bank>() {
+            @Override
+            public int compare(Bank s1, Bank s2) {
+                return s1.getDisplayName().compareToIgnoreCase(s2.getDisplayName());
+            }
+        });
+
 
         adapter.setShowHidden(showHidden);
         adapter.setGroups(banks);
