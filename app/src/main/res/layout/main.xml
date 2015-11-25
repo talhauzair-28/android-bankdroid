@@ -5,6 +5,7 @@
     android:background="@drawable/background_repeat"
     android:orientation="vertical">
 
+
     <include layout="@layout/toolbar" />
 
     <RelativeLayout
@@ -26,6 +27,43 @@
             android:layout_margin="10dp"
             android:text="@string/main_instructions"
             android:visibility="visible" />
+
+
+        <TextView
+            android:id="@+id/txtRearrangelist"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Re-order list by:"
+            android:visibility="gone" />
+
+
+        <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+            android:visibility="gone"
+        android:orientation="horizontal">
+
+
+        <RadioButton
+            android:id="@+id/rbtnUsername"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:checked="false"
+            android:text="UserName"/>
+
+        <RadioButton
+            android:id="@+id/rbtnBankname"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:checked="false"
+            android:text="BankName"/>
+
+
+    </RadioGroup>
+
+
+
 
         <ListView
             android:id="@+id/lstAccountsList"
