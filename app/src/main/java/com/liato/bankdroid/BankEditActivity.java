@@ -43,6 +43,8 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -96,7 +99,7 @@ public class BankEditActivity extends LockableActivity implements OnItemSelected
 
         List<Bank> items = BankFactory.listBanks(this);
         Collections.sort(items);
-        BankSpinnerAdapter<Bank> adapter = new BankSpinnerAdapter<>(this, items);
+      final  BankSpinnerAdapter<Bank> adapter = new BankSpinnerAdapter<>(this, items);
         mBankSpinner.setAdapter(adapter);
 
 
@@ -119,6 +122,33 @@ public class BankEditActivity extends LockableActivity implements OnItemSelected
             }
         }
         mBankSpinner.setOnItemSelectedListener(this);
+
+
+        EditText tsearch = (EditText)findViewById(R.id.etSearch);
+
+        tsearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                // TODO Auto-generated method stub
+
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+        });
     }
 
     @OnClick(R.id.btnSettingsOk)
@@ -251,9 +281,17 @@ public class BankEditActivity extends LockableActivity implements OnItemSelected
     private class BankSpinnerAdapter<T> extends ArrayAdapter<T> {
 
         private LayoutInflater inflater;
+        List<Bank> list;
+        List<Bank> list2;
+        ValueFilter valueFilter;
 
         public BankSpinnerAdapter(Context context, List<T> items) {
             super(context, R.layout.bank_spinner_item, R.id.txtBank, items);
+            list= BankFactory.listBanks(context);
+            Collections.sort(list);
+            list2 = list;
+
+
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -262,10 +300,18 @@ public class BankEditActivity extends LockableActivity implements OnItemSelected
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.bank_spinner_item, parent, false);
             }
+
+            /*
             ((TextView) convertView.findViewById(R.id.txtBank))
                     .setText(((Bank) getItem(position)).getName());
             ((ImageView) convertView.findViewById(R.id.imgBank))
-                    .setImageResource(((Bank) getItem(position)).getImageResource());
+                    .setImageResource(((Bank) getItem(position)).getImageResource()); */
+
+            ((TextView) convertView.findViewById(R.id.txtBank))
+                    .setText((list.get(position)).getName());
+            ((ImageView) convertView.findViewById(R.id.imgBank))
+                    .setImageResource((list.get(position)).getImageResource());
+
             return convertView;
         }
 
@@ -275,12 +321,89 @@ public class BankEditActivity extends LockableActivity implements OnItemSelected
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.bank_spinner_dropdown_item, parent, false);
             }
-            ((TextView) convertView.findViewById(R.id.txtBank))
+            /*((TextView) convertView.findViewById(R.id.txtBank))
                     .setText(((Bank) getItem(position)).getName());
             ((ImageView) convertView.findViewById(R.id.imgBank))
-                    .setImageResource(((Bank) getItem(position)).getImageResource());
+                    .setImageResource(((Bank) getItem(position)).getImageResource());*/
+
+
+            ((TextView) convertView.findViewById(R.id.txtBank))
+                    .setText((list.get(position)).getName());
+
+            ((ImageView) convertView.findViewById(R.id.imgBank))
+                    .setImageResource((list.get(position)).getImageResource());
             return convertView;
         }
+
+
+        /*
+
+                Searching Algo starts from here
+
+         */
+
+
+        @Override
+        public Filter getFilter() {
+            // TODO Auto-generated method stub
+
+            if(valueFilter == null)
+            {
+                valueFilter = new ValueFilter();
+            }
+            return valueFilter;
+        }
+
+        private class ValueFilter extends Filter {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults results = new FilterResults();
+
+                if (constraint != null && constraint.length() > 0) {
+                    ArrayList<Bank> filterList = new ArrayList<Bank>();
+                    list = list2;
+                    for (int i = 0; i < list.size(); i++)
+                    {
+                        if ( (list.get(i).getName().toUpperCase() )
+                                .contains(constraint.toString().toUpperCase()) ) {
+
+
+                            Bank newObj = list.get(i);
+                            filterList.add(newObj);
+                        }
+                    }
+                    results.count = filterList.size();
+                    results.values = filterList;
+                } else {
+                    results.count = list2.size();
+                    results.values = list2;
+                }
+                return results;  }
+
+
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          Filter.FilterResults results) {
+                list= (ArrayList<Bank>) results.values;
+                notifyDataSetChanged();
+            }
+
+        }
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            if(list != null)
+            {
+                return list.size();
+            }else
+            {
+                return 0;
+            }
+        }
+
 
 
     }
