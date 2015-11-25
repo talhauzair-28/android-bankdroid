@@ -48,6 +48,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -59,8 +60,21 @@ import butterknife.InjectView;
 
 public class MainActivity extends LockableActivity {
 
+
+    int Sortcheck =0;
+
     @InjectView(R.id.txtAccountsDesc)
     TextView mAccountsDescription;
+
+
+    @InjectView(R.id.txtRearrangelist)
+    TextView mRearrangeList;
+
+
+    @InjectView(R.id.rbtnUsername)
+    RadioButton sortByUserName;
+    @InjectView(R.id.rbtnBankname)
+    RadioButton sortByBankName;
 
     private final static String TAG = "MainActivity";
 
@@ -142,6 +156,25 @@ public class MainActivity extends LockableActivity {
             }
         }
         ((BankdroidApplication) getApplication()).showAndDeleteApplicationMessage();
+
+
+
+
+        sortByUserName.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Sortcheck = 1;
+                refreshView();
+            }
+        });
+
+        sortByBankName.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Sortcheck =2;
+                refreshView();
+            }
+        });
     }
 
     @Override
@@ -156,15 +189,34 @@ public class MainActivity extends LockableActivity {
     public void refreshView() {
         final ArrayList<Bank> banks = BankFactory.banksFromDb(this, true);
         mAccountsDescription.setVisibility(banks.isEmpty() ? View.VISIBLE : View.GONE);
+        mRearrangeList.setVisibility(banks.isEmpty() ? View.GONE: View.VISIBLE);
+        sortByUserName.setVisibility(banks.isEmpty() ? View.GONE: View.VISIBLE);
+        sortByBankName.setVisibility(banks.isEmpty() ? View.GONE: View.VISIBLE);
+
+
+        if(Sortcheck==0) {
 
 
 
-        Collections.sort(banks, new Comparator<Bank>() {
-            @Override
-            public int compare(Bank s1, Bank s2) {
-                return s1.getDisplayName().compareToIgnoreCase(s2.getDisplayName());
-            }
-        });
+
+        }else if(Sortcheck==1)
+        {
+            Collections.sort(banks, new Comparator<Bank>() {
+                @Override
+                public int compare(Bank s1, Bank s2) {
+                    return s1.getDisplayName().compareToIgnoreCase(s2.getDisplayName());
+                }
+            });
+        }
+        else if(Sortcheck==2)
+        {
+            Collections.sort(banks, new Comparator<Bank>() {
+                @Override
+                public int compare(Bank s1, Bank s2) {
+                    return s1.getName().compareToIgnoreCase(s2.getName());
+                }
+            });
+        }
 
         adapter.setShowHidden(showHidden);
         adapter.setGroups(banks);
