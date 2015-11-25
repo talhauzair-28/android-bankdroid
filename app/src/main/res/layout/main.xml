@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:background="@drawable/background_repeat"
+    android:id="@+id/overallBackground"
     android:orientation="vertical">
 
 
@@ -38,7 +39,7 @@
             android:id="@+id/rbtnBankname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           
+
             android:checked="false"
             android:text="BankName"/>
 
